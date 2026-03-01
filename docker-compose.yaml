@@ -1,0 +1,24 @@
+services:
+  smtp-tunnel-server:
+    build: .
+    image: smpt-tunnel-proxy:7a038da
+    container_name: smtp-tunnel-server
+    ports: 
+      - "587:587"
+    volumes: 
+      - ./config:/etc/smtp-tunnel
+  generate_certs: 
+    build: .
+    image: smpt-tunnel-proxy:7a038da
+    container_name: smtp-tunnel-gencerts
+    volumes:
+      - ./config:/etc/smtp-tunnel
+    command: |-
+      python3 generate_certs.py --hostname "smtp.l8t.at" --output-dir "/etc/smtp-tunnel/" && ln -sf "/etc/smtp-tunnel/ca.crt" "/opt/smtp-tunnel/ca.crt"
+  add_user: 
+    build: .
+    image: smpt-tunnel-proxy:7a038da
+    container_name: smtp-tunnel-adduser
+    volumes: 
+      - ./config:/etc/smtp-tunnel
+    command: python3 smtp-tunnel-adduser sabine --output-dir "/etc/smtp-tunnel"
