@@ -7,7 +7,7 @@ services:
       - "587:587"
     volumes: 
       - ./config:/etc/smtp-tunnel
-  generate_certs: 
+  smtp-tunnel-generate_certs: 
     build: .
     image: smpt-tunnel-proxy:7a038da
     container_name: smtp-tunnel-gencerts
@@ -15,7 +15,7 @@ services:
       - ./config:/etc/smtp-tunnel
     command: |-
       python3 generate_certs.py --hostname "smtp.l8t.at" --output-dir "/etc/smtp-tunnel/" && ln -sf "/etc/smtp-tunnel/ca.crt" "/opt/smtp-tunnel/ca.crt"
-  add_user: 
+  smtp-tunnel-add_user: 
     build: .
     image: smpt-tunnel-proxy:7a038da
     container_name: smtp-tunnel-adduser
